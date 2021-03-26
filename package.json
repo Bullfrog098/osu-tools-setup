@@ -1,13 +1,17 @@
 {
   "name": "osu-tools-setup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "installs and updates osu-tools",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Bullfrog098/osu-tools-setup"
+  },
+  "author": "Bullfrog098 (https://github.com/Bullfrog098)",
   "scripts": {
     "start": "node ."
   },
   "keywords": [],
-  "author": "Bullfrog098",
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^7.0.1",
