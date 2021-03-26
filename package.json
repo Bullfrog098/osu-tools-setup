@@ -1,6 +1,6 @@
 {
   "name": "osu-tools-setup",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "installs and updates osu-tools",
   "main": "index.js",
   "repository": {
@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node ."
   },
-  "keywords": [],
+  "keywords": ["osu", "osu-tools"],
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^7.0.1",
