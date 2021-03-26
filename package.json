@@ -1,0 +1,17 @@
+{
+  "name": "osu-tools-setup",
+  "version": "1.0.0",
+  "description": "installs and updates osu-tools",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "Bullfrog098",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^7.0.1",
+    "nodegit": "^0.27.0",
+    "open": "^8.0.4"
+  }
+}
