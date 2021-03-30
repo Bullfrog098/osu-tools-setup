@@ -18,7 +18,11 @@ module.exports = {
 
 	lastestversion: () =>{
 		return new Promise ( async ( resolve ) => {
-			await exec( "git clone https://github.com/ppy/osu-tools.git tmp" );
+			let a = await exec( "git clone https://github.com/ppy/osu-tools.git tmp\\osu-tools" );
+			if ( a === "ENOENT" ){
+				await installgit();
+				await exec( "git clone https://github.com/ppy/osu-tools.git tmp\\osu-tools" );
+			}
 			var onlinehash = await git.long( `${local}/tmp/osu-tools` );
 			if ( fs.existsSync( `${directory}/osu-tools` ) ){
 				var localhash = await git.long( `${directory}/osu-tools` );
@@ -86,7 +90,7 @@ function downloadosutools(){
 		//var a = await Git.Clone( "https://github.com/ppy/osu-tools", `${local}/tmp/osu-tools` );
 		//var b = await a.getHeadCommit( );
 		//var onlinehash = await b.sha();
-		await exec( "git clone https://github.com/ppy/osu-tools.git tmp" );
+		await exec( "git clone https://github.com/ppy/osu-tools.git tmp\\osu-tools" );
 		var onlinehash = await git.long( `${local}/tmp/osu-tools` );
 		if ( fs.existsSync( `${directory}/osu-tools` ) ){
 			//var c = await Git.Repository.open( `${directory}/osu-tools` );
