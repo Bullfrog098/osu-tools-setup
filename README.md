@@ -4,7 +4,8 @@ Easily install and update osu-tools
 
 *NOTE: This is for Windows only*
 
-*if anyone can figure out a way to download a git repo with the .git folder still in it without using nodegit lemme know since some people have to download like 600mb+ worth of stuff for nodegit*
+~~*if anyone can figure out a way to download a git repo with the .git folder still in it without using nodegit lemme know since some people have to download like 600mb+ worth of stuff for nodegit*~~
+Ima just force you guys to install git cli if you didn't already have it :)
 
 My Discord: Bullfrog098#7886
 
