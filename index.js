@@ -1,15 +1,16 @@
-const fs = require( "fs-extra" );
-//var Git = require( "nodegit" );
-const git = require( "git-rev-sync" );
-const request = require( "request" );
-const https = require( "https" );
-const open = require( "open" );
+const fs        = require( "fs-extra" );
+//var Git       = require( "nodegit" );
+const git       = require( "git-rev-sync" );
+const request   = require( "request" );
+const https     = require( "https" );
+const open      = require( "open" );
 const directory = process.cwd();
-const local = __dirname;
-var path = `${local}/dotnet-sdk-3.1.407-win-x64.exe`;
-var gitpath = `${local}/Git-2.31.0-64-bit.exe`;
+const local     = __dirname;
+var path        = `${local}/dotnet-sdk-3.1.407-win-x64.exe`;
+var gitpath     = `${local}/Git-2.31.0-64-bit.exe`;
 const dotneturl = "https://download.visualstudio.microsoft.com/download/pr/a45c8c1c-6466-4afc-a266-bd540069a4a6/97293f1080615bba5572ad1ef3be254c/dotnet-sdk-3.1.407-win-x64.exe";
-const giturl = "https://github.com/git-for-windows/git/releases/download/v2.31.0.windows.1/Git-2.31.0-64-bit.exe";
+const giturl    = "https://github.com/git-for-windows/git/releases/download/v2.31.0.windows.1/Git-2.31.0-64-bit.exe";
+
 if ( fs.existsSync( `${local}/tmp` ) ) fs.emptyDirSync( `${local}/tmp` );
 
 
@@ -17,16 +18,9 @@ module.exports = {
 
 	lastestversion: () =>{
 		return new Promise ( async ( resolve ) => {
-			//var a = await Git.Clone( "https://github.com/ppy/osu-tools", `${local}/tmp/osu-tools` );
-			//var b = await a.getHeadCommit( );
-			//var onlinehash = await b.sha();
 			await exec( "git clone https://github.com/ppy/osu-tools.git tmp" );
 			var onlinehash = await git.long( `${local}/tmp/osu-tools` );
-
 			if ( fs.existsSync( `${directory}/osu-tools` ) ){
-				//var c = await Git.Repository.open( `${directory}/osu-tools` );
-				//var d = await c.getHeadCommit();
-				//var localhash = await d.sha();
 				var localhash = await git.long( `${directory}/osu-tools` );
 				if ( localhash === onlinehash ) resolve( true );
 			} else resolve( false );
