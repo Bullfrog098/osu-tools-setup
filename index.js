@@ -110,7 +110,7 @@ function installgit(){
 	return new Promise ( ( resolve ) => {
 		download( giturl, gitpath, async ( ) => {
 			await open( gitpath, { wait: true } );
-			resolve();
+			return resolve();
 		} );
 	} );
 }
