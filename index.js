@@ -6,9 +6,9 @@ const https     = require( "https" );
 const open      = require( "open" );
 const directory = process.cwd();
 const local     = __dirname;
-var path        = `${local}/dotnet-sdk-3.1.407-win-x64.exe`;
+var path        = `${local}/dotnet-sdk-5.0.301-win-x64.exe`;
 var gitpath     = `${local}/Git-2.31.0-64-bit.exe`;
-const dotneturl = "https://download.visualstudio.microsoft.com/download/pr/a45c8c1c-6466-4afc-a266-bd540069a4a6/97293f1080615bba5572ad1ef3be254c/dotnet-sdk-3.1.407-win-x64.exe";
+const dotneturl = "https://download.visualstudio.microsoft.com/download/pr/ced7fd9b-73b9-4756-b9a4-e887281b8c82/7ab0a8e6e8257f1322c6b63a5e01fcb9/dotnet-sdk-5.0.301-win-x64.exe"
 const giturl    = "https://github.com/git-for-windows/git/releases/download/v2.31.0.windows.1/Git-2.31.0-64-bit.exe";
 
 if ( fs.existsSync( `${local}/tmp` ) ) fs.emptyDirSync( `${local}/tmp` );
