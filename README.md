@@ -10,7 +10,7 @@ Requires: dotnet sdk 3.1 and git cli, both can be installed using the code upon 
 
 Ima just force you guys to install git cli if you didn't already have it :)
 
-My Discord: Bullfrog098#7886
+My Discord: Bullfrog098#2579
 
 ## Documentation
 ```js
