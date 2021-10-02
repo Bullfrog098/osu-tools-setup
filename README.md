@@ -4,7 +4,7 @@ Easily install and update osu-tools
 
 *NOTE: This is for Windows only*
 
-Requires: dotnet sdk 3.1 and git cli, both can be installed using the code upon running `firsttimesetup()`
+Requires: dotnet sdk 5.something and git cli, both can be installed using the code upon running `firsttimesetup()`
 
 ~~*if anyone can figure out a way to download a git repo with the .git folder still in it without using nodegit lemme know since some people have to download like 600mb+ worth of stuff for nodegit*~~
 
