@@ -19,7 +19,7 @@ const osutools = require('osu-tools-setup');
 
 
 #### firsttimesetup()
-Starts setup for dotnet 3.1 framework and osu-tools.
+Starts setup for dotnet 5.0 framework and osu-tools.
 
  `true` = passed
  

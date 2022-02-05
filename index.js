@@ -28,13 +28,13 @@ module.exports = {
 				var localhash = await git.long( `${directory}/osu-tools` );
 				if ( localhash === onlinehash ) resolve( true );
 			} else resolve( false );
-			await fs.rmdirSync( `${local}/tmp`, { recursive: true } );
+			await fs.rmSync( `${local}/tmp`, { recursive: true } );
 			return resolve( false );
 		} );
 	},
 
 	updateosutools: async () => {
-		var e = await ppmaker( false );
+		var e = await ppmaker( false, true );
 		return e;
 	}, 
 
@@ -48,11 +48,14 @@ function start( first ){
 	return new Promise ( async ( resolve ) => {
 		let a = await exec( "git --version" );
 		if ( a === "ENOENT" ) await installgit();
+
+		let c = await exec( "dotnet --list-sdks", true );
+		if ( c === "ENOENT" ){
 		if ( fs.existsSync( path ) ){
 			let e = await ppmaker( first );
 			return resolve( e );
 		}
-
+		console.log('Downloading Dotnet')
 		https.get( dotneturl,( res ) => {
 			const filePath = fs.createWriteStream( path );
 			res.pipe( filePath );
@@ -63,20 +66,23 @@ function start( first ){
 				return resolve( e );
 			} );
 		} );
-
+	} else {
+		let e = await ppmaker();
+			return resolve( e );
+	}
 	} );
 }
 
-async function ppmaker( first ){
+async function ppmaker( first, update ){
 	return new Promise ( async ( resolve ) => {
 		if ( first === true ) await open( path, { wait: true } );
-		var e = await downloadosutools();
+		var e = await downloadosutools(update);
 
 		if ( e === false ){ 
 			if ( fs.existsSync( path ) ) fs.unlinkSync( path );
 			return resolve( true );
 		} 
-		
+		console.log('setting up please wait...')
 		let result = await exec( "dotnet run --project osu-tools\\PerformanceCalculator" );
 		var done = true;
 		if( result.toString().includes( "command \"dotnet run --project osu-tools\\PerformanceCalculator\" exited with wrong status code" ) ) done = false;
@@ -85,7 +91,7 @@ async function ppmaker( first ){
 	} );
 }
 
-function downloadosutools(){
+function downloadosutools(update){
 	return new Promise ( async ( resolve ) => {
 		//var a = await Git.Clone( "https://github.com/ppy/osu-tools", `${local}/tmp/osu-tools` );
 		//var b = await a.getHeadCommit( );
@@ -99,15 +105,16 @@ function downloadosutools(){
 			var localhash = await git.long( `${directory}/osu-tools` );
 			if ( localhash === onlinehash ) return resolve( false );
 		}
-		await fs.rmdirSync( `${directory}/osu-tools`, { recursive: true } );
+		if ( update === true ) await fs.rmSync( `${directory}/osu-tools`, { recursive: true } );
 		await fs.copySync( `${local}/tmp/osu-tools`, `${directory}/osu-tools` );
-		await fs.rmdirSync( `${local}/tmp`, { recursive: true } );
+		await fs.rmSync( `${local}/tmp`, { recursive: true } );
 		return resolve();
 	} );
 }
 
 function installgit(){
 	return new Promise ( ( resolve ) => {
+		console.log('Downloading git')
 		download( giturl, gitpath, async ( ) => {
 			await open( gitpath, { wait: true } );
 			return resolve();
@@ -115,12 +122,18 @@ function installgit(){
 	} );
 }
 
-function exec( cmd ){
+function exec( cmd, dotnetcheck ){
 	return new Promise ( async ( resolve ) => {
 		try{
 			var child_process = require( "child_process" );
 			var parts = cmd.split( /\s+/g );
-			var p = child_process.spawn( parts[0], parts.slice( 1 ), { stdio: "inherit" } );
+			if (dotnetcheck === true){
+				child_process.execFile( parts[0], parts.slice( 1 ), ( err, stdout ) => {
+					if ( stdout.length === 0 ) return resolve( "ENOENT" );
+					else return resolve( "allgood" );
+				} );
+			} else {
+			var p = child_process.spawn( parts[0], parts.slice( 1 ), { stdio: "pipe" } );//{ stdio: "inherit" } );
 			p.on( "exit", function( code ){
 				var err = "allgood";
 				if ( code ) {
@@ -131,8 +144,10 @@ function exec( cmd ){
 				return resolve( err );
 			} );
 			p.on( "error", function( err ) {
+				console.log(err)
 				if( err.toString().includes( "ENOENT" ) ) return resolve( "ENOENT" );
 			} );
+			}
 		} catch ( e ) {
 			return console.log( e );
 		}
