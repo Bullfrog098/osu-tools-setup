@@ -6,9 +6,9 @@ const https     = require( "https" );
 const open      = require( "open" );
 const directory = process.cwd();
 const local     = __dirname;
-var path        = `${local}/dotnet-sdk-5.0.301-win-x64.exe`;
+var path        = `${local}/dotnet-sdk-6.0.301-win-x64.exe`;
 var gitpath     = `${local}/Git-2.31.0-64-bit.exe`;
-const dotneturl = "https://download.visualstudio.microsoft.com/download/pr/ced7fd9b-73b9-4756-b9a4-e887281b8c82/7ab0a8e6e8257f1322c6b63a5e01fcb9/dotnet-sdk-5.0.301-win-x64.exe"
+const dotneturl = "https://download.visualstudio.microsoft.com/download/pr/15ab772d-ce5c-46e5-a90e-57df11adabfb/4b1b1330b6279a50c398f94cf716c71e/dotnet-sdk-6.0.301-win-x64.exe"
 const giturl    = "https://github.com/git-for-windows/git/releases/download/v2.31.0.windows.1/Git-2.31.0-64-bit.exe";
 
 if ( fs.existsSync( `${local}/tmp` ) ) fs.emptyDirSync( `${local}/tmp` );
@@ -19,7 +19,7 @@ module.exports = {
 	lastestversion: () =>{
 		return new Promise ( async ( resolve ) => {
 			let a = await exec( `git clone https://github.com/ppy/osu-tools.git ${local}/tmp/osu-tools`);
-			if ( a === "ENOENT" ){
+			if ( a[0] === "ENOENT" ){
 				await installgit();
 				await exec( `git clone https://github.com/ppy/osu-tools.git ${local}/tmp/osu-tools` );
 			}
@@ -47,10 +47,9 @@ module.exports = {
 function start( first ){
 	return new Promise ( async ( resolve ) => {
 		let a = await exec( "git --version" );
-		if ( a === "ENOENT" ) await installgit();
-
+		if ( a[0] === "ENOENT" ) await installgit();
 		let c = await exec( "dotnet --list-sdks", true );
-		if ( c === "ENOENT" ){
+		if ( c[0] === "ENOENT" || !c[1].includes( "6." ) ){
 		if ( fs.existsSync( path ) ){
 			let e = await ppmaker( first );
 			return resolve( e );
@@ -96,6 +95,7 @@ function downloadosutools(update){
 		//var a = await Git.Clone( "https://github.com/ppy/osu-tools", `${local}/tmp/osu-tools` );
 		//var b = await a.getHeadCommit( );
 		//var onlinehash = await b.sha();
+		if (!fs.existsSync(`${directory}/osu-tools/PerformanceCalculator/bin`)) return resolve();
 		await exec( `git clone https://github.com/ppy/osu-tools.git ${local}/tmp/osu-tools` );
 		var onlinehash = await git.long( `${local}/tmp/osu-tools` );
 		if ( fs.existsSync( `${directory}/osu-tools` ) ){
@@ -129,8 +129,8 @@ function exec( cmd, dotnetcheck ){
 			var parts = cmd.split( /\s+/g );
 			if (dotnetcheck === true){
 				child_process.execFile( parts[0], parts.slice( 1 ), ( err, stdout ) => {
-					if ( stdout.length === 0 ) return resolve( "ENOENT" );
-					else return resolve( "allgood" );
+					if ( stdout.length === 0 ) return resolve( ["ENOENT", stdout] );
+					else return resolve( ["allgood", stdout] );
 				} );
 			} else {
 			var p = child_process.spawn( parts[0], parts.slice( 1 ), { stdio: "pipe" } );//{ stdio: "inherit" } );
@@ -145,7 +145,7 @@ function exec( cmd, dotnetcheck ){
 			} );
 			p.on( "error", function( err ) {
 				console.log(err)
-				if( err.toString().includes( "ENOENT" ) ) return resolve( "ENOENT" );
+				if( err.toString().includes( "ENOENT" ) ) return resolve( ["ENOENT", stdout] );
 			} );
 			}
 		} catch ( e ) {
