@@ -1,6 +1,6 @@
 {
   "name": "osu-tools-setup",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "installs and updates osu-tools",
   "main": "index.js",
   "repository": {
